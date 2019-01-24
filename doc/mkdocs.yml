@@ -1,0 +1,7 @@
+site_name: Introducción a Django
+nav:
+    - Introducción: index.md
+    - URLs & Views: urls_views.md
+    - Templates: templates.md
+    - Auth: auth.md
+    - Models: models.md
