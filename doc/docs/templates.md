@@ -1,7 +1,3 @@
-# URLs y Views
+# Templates
+ 
 
-## Instalar 
-
-
-
-## Project layout

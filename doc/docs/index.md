@@ -2,6 +2,9 @@
 
 ## Preparando el entorno 
 
+- Primero instalamos [virtualenv](https://virtualenv.pypa.io/en/latest/installation/) para poder gestionar nuestros
+distintos entornos de desarrollo sin "contaminar" nuestro sistema operativo.
+ 
  `$ virtualenv venv` - Creamos un nuevo virtualenv para nuestro proyecto.
  
  `$ source venv/bin/activate` - Activamos el entorno virtual para nuestro nuevo proyecto.
@@ -43,7 +46,7 @@ Es el típico patrón MCV (Modelo-Vista-Controlador) que Django redefine a MVT (
 
 ## ¿Qué tiene Django para que sea especial?
 
-Django tiene lo imprescindible para que sea especial, ¡está escrito en Python!. Pero si te faltan razones aún...
+[Django](https://www.djangoproject.com/start/overview/) tiene lo imprescindible para que sea especial, ¡está escrito en Python!. Pero si te faltan razones aún...
 
 • Provee una estructura de trabajo bajo el patrón Model Template View.
 

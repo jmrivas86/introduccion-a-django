@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>Introducción a Django</title>
+        <link href="css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="js/jquery-1.10.2.min.js" defer></script>
+        <script src="js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body class="homepage">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href=".">Introducción a Django</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                <a href=".">Introducción</a>
+                            </li>
+                            <li >
+                                <a href="urls_views/">URLs & Views</a>
+                            </li>
+                            <li >
+                                <a href="templates/">Templates</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="disabled">
+                                <a rel="next" >
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="urls_views/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#introduccion-a-django">Introducción a Django</a></li>
+            <li><a href="#preparando-el-entorno">Preparando el entorno</a></li>
+            <li><a href="#introduccion">Introducción</a></li>
+            <li><a href="#patron-mvt">Patrón MVT</a></li>
+            <li><a href="#que-tiene-django-para-que-sea-especial">¿Qué tiene Django para que sea especial?</a></li>
+            <li><a href="#quien-usa-django">¿Quién usa Django?</a></li>
+            <li><a href="#crear-proyecto">Crear proyecto</a></li>
+            <li><a href="#arranquemos-nuestro-servidor-de-desarrollo">Arranquemos nuestro servidor de desarrollo</a></li>
+            <li><a href="#proyecto-vs-aplicaciones">Proyecto vs Aplicaciones</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="introduccion-a-django">Introducción a Django</h1>
+<h2 id="preparando-el-entorno">Preparando el entorno</h2>
+<ul>
+<li>Primero instalamos <a href="https://virtualenv.pypa.io/en/latest/installation/">virtualenv</a> para poder gestionar nuestros
+distintos entornos de desarrollo sin "contaminar" nuestro sistema operativo.</li>
+</ul>
+<p><code>$ virtualenv venv</code> - Creamos un nuevo virtualenv para nuestro proyecto.</p>
+<p><code>$ source venv/bin/activate</code> - Activamos el entorno virtual para nuestro nuevo proyecto.</p>
+<p><code>$ pip install django==2.1.5</code> - Activamos el entorno virtual para nuestro nuevo proyecto.</p>
+<h2 id="introduccion">Introducción</h2>
+<ul>
+<li>
+<p><strong>Framework web</strong> de alto nivel escrito en <strong>Python</strong> que fomenta el <strong>desarrollo rápido y limpio</strong> además del diseño 
+pragmático.</p>
+</li>
+<li>
+<p>Nace en la redacción de World Online para crear aplicaciones web rápidamente con fechas ajustadas</p>
+</li>
+<li>
+<p>Su nombre viene dado en alusión al guitarrista de jazz Django Reinhardt.</p>
+</li>
+<li>
+<p>En 2005 fue liberado al público bajo la licencia BSD y desde 2008 es la DSF (Django Software Foundation) quien se hace
+ cargo del proyecto con la intención de apoyar el desarrollo, promover su uso, proteger su propiedad intelectual y 
+ asegurar su viabilidad a largo plazo.</p>
+</li>
+<li>
+<p>Sigue el principio <strong>DRY</strong>: Don't Repeat Yourself</p>
+</li>
+<li>
+<p>Para acabar destacar también la gran documentación oficial, un lugar perfecto para aprender, así como a su cada día 
+más extensa comunidad de usuarios, lo que confirma su buen momento y el futuro que tiene por delante.</p>
+</li>
+</ul>
+<h2 id="patron-mvt">Patrón MVT</h2>
+<p>Es el típico patrón MCV (Modelo-Vista-Controlador) que Django redefine a MVT (Modelo-Vista-Template).</p>
+<p><img alt="MVT" src="imgs/mvt.jpg" title="Patrón MVT" /></p>
+<ul>
+<li>
+<p><strong>URLs:</strong> Aunque es posible procesar peticiones de cada URL individual vía una función individual, es mucho más sostenible escribir una función de visualización separada para cada recurso. Se usa un mapeador URL para redirigir las peticiones HTTP a la vista apropiada basándose en la URL de la petición. El mapeador URL se usa para redirigir las peticiones HTTP a la vista apropiada basándose en la URL de la petición. El mapeador URL puede también emparejar patrones de cadenas o dígitos específicos que aparecen en una URL y los pasan a la función de visualización como datos.</p>
+</li>
+<li>
+<p><strong>Vista (View):</strong> Una vista es una función de gestión de peticiones que recibe peticiones HTTP y devuelve respuestas HTTP. Las vistas acceden a los datos que necesitan para satisfacer las peticiones por medio de modelos, y delegan el formateo de la respuesta a las plantillas ("templates").</p>
+</li>
+<li>
+<p><strong>Modelos (Models):</strong> Los Modelos son objetos de Python que definen la estructura de los datos de una aplicación y proporcionan mecanismos para gestionar (añadir, modificar y borrar) y consultar regsitros en la base de datos.</p>
+</li>
+<li>
+<p><strong>Plantillas (Templates):</strong> una plantilla (template) es un fichero de texto que define la estructura o diagrama de otro fichero (tal como una página HTML), con marcadores de posición que se utilizan para representar el contenido real. Una vista puede crear dinámicamente una página usando una plantilla, rellenandola con datos de un modelo. Una plantilla se puede usar para definir la estructura de cualquier tipo de fichero; ¡no tiene porqué ser HTML!</p>
+</li>
+</ul>
+<h2 id="que-tiene-django-para-que-sea-especial">¿Qué tiene Django para que sea especial?</h2>
+<p><a href="https://www.djangoproject.com/start/overview/">Django</a> tiene lo imprescindible para que sea especial, ¡está escrito en Python!. Pero si te faltan razones aún...</p>
+<p>• Provee una estructura de trabajo bajo el patrón Model Template View.</p>
+<p>• Servidor local de desarrollo.</p>
+<p>• Mapea objetos Python con la base de datos (ORM).</p>
+<p>• Permite diseñar URLs amigables para buscadores (útil para
+SEO).</p>
+<p>• Tiene un sistema de plantillas sencillo para diseñadores.</p>
+<p>• Genera una interfaz de administración automática.</p>
+<p>• Dispone de un framework para manejar formularios.</p>
+<p>• Puede gestionar sesiones de usuario, autenticación, caché,
+almacenamiento, sitemaps, internacionalización... etc</p>
+<h2 id="quien-usa-django">¿Quién usa Django?</h2>
+<ul>
+<li>Disqus</li>
+<li>Instagram</li>
+<li>Foundation Mozilla</li>
+<li>National Geographic</li>
+<li>Pinterest</li>
+<li>Open Stack</li>
+<li>Y muchos más!</li>
+</ul>
+<h2 id="crear-proyecto">Crear proyecto</h2>
+<p>Para crear un proyecto Django tenemos que ejecutar el siguiente comando:</p>
+<p><code>$ django-admin startproject narangram</code></p>
+<p>Veamos lo que el comando <strong>startproject</strong> creó:</p>
+<ol>
+<li><strong>El directorio raíz externo 'narangram/'</strong> solo es un contenedor de su proyecto. Su nombre no es relevante para Django; se puede cambiar el nombre.</li>
+<li><strong>manage.py:</strong> Nos permite ejecutar comandos de Django sobre el proyecto (ej. para crear nuevas aplicaciones)</li>
+<li><strong>El directorio interno 'narangram/'</strong> es el paquete de Python real para su proyecto. Su nombre es el nombre del paquete de Python que tendrá que utilizar para importar nada en su interior (por ejemplo narangram.urls).</li>
+<li><strong>narangram/<strong> init</strong>.py:</strong> Un archivo vacío que le dice a Python que este directorio debe considerarse como un paquete de Python.</li>
+<li><strong>narangram/settings.py:</strong> Contiene la configuración de la aplicación (conexión a bases de datos, aplicaciones instaladas, etc.).</li>
+<li><strong>narangram/urls.py:</strong> Las declaraciones URL para este proyecto Django; una “tabla de contenidos” de su sitio basado en Django.</li>
+<li><strong>narangram/wsgi.py:</strong> Un punto de entrada para que los servidores web compatibles con WSGI puedan servir su proyecto.</li>
+</ol>
+<h2 id="arranquemos-nuestro-servidor-de-desarrollo">Arranquemos nuestro servidor de desarrollo</h2>
+<p><code>$ cd narangram</code></p>
+<p><code>$ python manage.py runserver</code></p>
+<p><img alt="runserver" src="imgs/runserver.png" title="Runserver" /></p>
+<h2 id="proyecto-vs-aplicaciones">Proyecto vs Aplicaciones</h2>
+<p>Como vimos, Django se basa en el principio DRY y por ello introduce un sistema de reutilización de código 
+organizado en apps, podemos verlo como aplicaciones internas que implementan funcionalidades específicas.</p>
+<p>Cada aplicación que escribimos en Django consiste en un paquete de Python que sigue una determinada convención.</p>
+<p>Django tiene una utilidad que genera automáticamente la estructura básica de directorios de una aplicación, 
+lo cual nos ayuda a que nos centremos en escribir código en lugar de crear directorios ¡WIN! \o/</p>
+<p>Django tiene muchas apps genéricas para gestión de usuario, mensajes, sesiones, admin... pero también nos permite crear 
+las nuestras propias, y eso es una de las mejores ideas de este framework, pues una app no tiene que limitarse 
+a un solo proyecto, sino que se puede reutilizar en varios. 
+En los repositorios de <a href="https://pypi.org">PyPi</a> o en <a href="https://djangopackages.org">https://djangopackages.org</a> existen 
+muchísimas apps de Django creadas por la comunidad y que podemos usar en nuestros proyectos Django fácilmente.</p>
+<ul>
+<li>
+<p>Un proyecto puede tener estar compuesta por muchas aplicaciones.</p>
+</li>
+<li>
+<p>Una aplicación puede estar en varios proyectos.</p>
+</li>
+</ul>
+<p>Ahora que ya sabemos la diferencia vamos a empezar creando nuestra primera app que compondrá nuestro proyecto 
+<strong>narangram</strong>. Crearemos la app que gestionará el registro de usuarios, login, logout.</p>
+<p><code>$ python manage.py startapp naranuser</code></p>
+<p>Eso va a crear un directorio <strong>naranuser</strong> con la siguiente estructura de directorios:</p>
+<p><img alt="naranuser" src="imgs/app.png" title="Naranuser app" /></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js" defer></script>
+        <script src="search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.0.4
+Build Date UTC : 2019-01-25 18:29:52
+-->
