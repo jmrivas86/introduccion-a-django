@@ -1,7 +1,4 @@
-# URLs y Views
+# Usuarios en Django
 
 ## Instalar 
 
-
-
-## Project layout

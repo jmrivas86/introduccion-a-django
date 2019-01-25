@@ -96,3 +96,35 @@ Para crear un proyecto Django tenemos que ejecutar el siguiente comando:
 `$ python manage.py runserver`
 
 ![runserver](imgs/runserver.png "Runserver")
+
+## Proyecto vs Aplicaciones
+
+Como vimos, Django se basa en el principio DRY y por ello introduce un sistema de reutilización de código 
+organizado en apps, podemos verlo como aplicaciones internas que implementan funcionalidades específicas.
+
+Cada aplicación que escribimos en Django consiste en un paquete de Python que sigue una determinada convención.
+
+Django tiene una utilidad que genera automáticamente la estructura básica de directorios de una aplicación, 
+lo cual nos ayuda a que nos centremos en escribir código en lugar de crear directorios ¡WIN! \o/
+
+Django tiene muchas apps genéricas para gestión de usuario, mensajes, sesiones, admin... pero también nos permite crear 
+las nuestras propias, y eso es una de las mejores ideas de este framework, pues una app no tiene que limitarse 
+a un solo proyecto, sino que se puede reutilizar en varios. 
+En los repositorios de [PyPi](https://pypi.org) o en [https://djangopackages.org](https://djangopackages.org) existen 
+muchísimas apps de Django creadas por la comunidad y que podemos usar en nuestros proyectos Django fácilmente.
+
+- Un proyecto puede tener estar compuesta por muchas aplicaciones.
+
+- Una aplicación puede estar en varios proyectos.
+
+Ahora que ya sabemos la diferencia vamos a empezar creando nuestra primera app que compondrá nuestro proyecto 
+**narangram**. Crearemos la app que gestionará el registro de usuarios, login, logout.
+
+`$ python manage.py startapp naranuser`
+
+Eso va a crear un directorio **naranuser** con la siguiente estructura de directorios:
+
+![naranuser](imgs/app.png "Naranuser app")
+
+
+
