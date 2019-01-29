@@ -9,10 +9,8 @@ distintos entornos de desarrollo sin "contaminar" nuestro sistema operativo.
  `$ sudo apt update; sudo apt -y dist-upgrade; sudo apt -y autoremove` 
  
  `$ sudo apt install build-essential libssl-dev libffi-dev python3-dev python3-pip`
- 
- `$ pip3 install virtualenv` 
- 
- `$ pip3 install virtualenv` 
+  
+ `$ pip3 install virtualenv` - Importante hacer con el $USER (no root, no sudo)
  
  `$ virtualenv -p python3 venv` - Creamos un nuevo virtualenv para nuestro proyecto.
  
