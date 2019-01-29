@@ -82,11 +82,263 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#templates">Templates</a></li>
+            <li><a href="#herencia-de-plantillas">Herencia de plantillas</a></li>
+            <li><a href="#ejercicio">Ejercicio</a></li>
+            <li><a href="#template-tags">Template tags</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="templates">Templates</h1></div>
+<h1 id="templates">Templates</h1>
+<p>Para utilizar una plantilla lo primero es crearla, y para ello debemos hacerlo siguiendo una lógica. 
+Lo primero es crear un directorio <strong>templates</strong> en nuestra app, que dentro debe contener otro 
+directorio con el mismo nombre que la app, en nuestro caso <strong>naranuser</strong>.</p>
+<p>Tenemos que hacerlo así porque Django funciona mezclando los directorios templates de las apps, de manera que al 
+final él tiene un solo directorio templates y dentro otro para cada app.</p>
+<p>Dentro de este subdirectorio <strong>templates/narangram</strong> de la app vamos a comenzar creando un fichero <strong>home.html</strong>:</p>
+<p><img alt="crear directorio tempalte" src="../imgs/template1.png" title="crear directorio tempalte" /></p>
+<p>Vamos a realizar una primera versión (en crudo, sin estilos) de lo que sería nuestra home en html:</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Narangram Home&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Mi Web Personal&lt;/h1&gt;
+
+&lt;ul&gt;
+    &lt;li&gt;&lt;a href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/login/&quot;&gt;Login&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/signup/&quot;&gt;Signup&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Bienvenidos&lt;/h2&gt;
+
+&lt;p&gt;Esto es la portada de Narangram&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre>
+
+<p>Lo que nos interesa es cambiar nuestra vista para que en lugar de devolver la respuesta HttpResponse devuelva este 
+template HTML, y para ello vamos utilizar el método render del módulo http de Django, que ya viene incluido por defecto.</p>
+<p>Vamos al fichero <strong>views.py</strong> y realizemos un refactor de nuestra vista hello_world para adaptarla al proyecto:</p>
+<pre><code class="python">def home(request):
+    return render(request, &quot;narangram/home.html&quot;)
+
+</code></pre>
+
+<p>Además tenemos que cambiar el nombre de la función en <strong>urls.py</strong> de nuestra aplicación:</p>
+<pre><code class="python">from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+]
+
+</code></pre>
+
+<p>Una vez hecho vamos a probar si carga la portada, pero como podréis observar no funcionará ya que por defecto Django 
+optimiza el uso de la memoria así que no carga las plantillas de una app que no esté instalada en 
+settings.py. Para cargar la app core y sus plantillas en memoria debemos ir al fichero <strong>narangram/settings.py</strong> y 
+añadir la app en la lista <strong>INSTALLED_APPS</strong> justo abajo del todo:</p>
+<pre><code class="python">INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'naranuser.apps.NaranuserConfig',
+]
+</code></pre>
+
+<p>Ahora probamos de nuevo y... FUNCIONA! pero vamos a darle algo de estilo a nuestro html, añadamos 
+<a href="https://getbootstrap.com/docs/4.2/getting-started/download/">bootstrap</a>. Vamos a introducir además el header y 
+el footer de la web.</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Narangram Home&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css&quot; integrity=&quot;sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS&quot; crossorigin=&quot;anonymous&quot;&gt;
+    &lt;script src=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js&quot; integrity=&quot;sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;header&gt;
+  &lt;div class=&quot;d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm&quot;&gt;
+  &lt;h5 class=&quot;my-0 mr-md-auto font-weight-normal&quot;&gt;Narangram&lt;/h5&gt;
+  &lt;nav class=&quot;my-2 my-md-0 mr-md-3&quot;&gt;
+    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;a class=&quot;btn btn-outline-primary&quot; href=&quot;#&quot;&gt;Sign up&lt;/a&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;main role=&quot;main&quot;&gt;
+
+  &lt;section class=&quot;jumbotron text-center&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+      &lt;h1 class=&quot;jumbotron-heading&quot;&gt;Narangram HOME&lt;/h1&gt;
+      &lt;p class=&quot;lead text-muted&quot;&gt;
+          Esta es la Home de Narangram
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+&lt;/main&gt;
+&lt;footer class=&quot;text-muted&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;p class=&quot;float-right&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Back to top&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;p&gt;Este es el footer&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="herencia-de-plantillas">Herencia de plantillas</h2>
+<p>Si ahora quisiéramos crear una nueva url para dar información sobre la web, imagina que la llamamos "about", 
+¿cómo lo haríamos?...</p>
+<p>Iríamos al fichero <strong>views.py</strong> y crearíamos un nuevo método <strong>about</strong>:</p>
+<pre><code class="python">def about(request):
+    return render(request, &quot;narangram/about.html&quot;)
+
+</code></pre>
+
+<p>Además tenemos que añadir esta nueva view en <strong>urls.py</strong> de nuestra aplicación:</p>
+<pre><code class="python">from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.about, name='about'),
+]
+
+</code></pre>
+
+<p>¿Y el html? ¿qué hacemos con el html?, quiero que antes de responder pienses en una frase:</p>
+<blockquote>
+<p>En programación, si estás repitiendo código, es que lo estás haciendo mal.</p>
+</blockquote>
+<p>Vale imagina que hacemos "el camino fácil", copiamos el anterior html y añadimos lo que queremos en nuestra nueva vista:</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Narangram Home&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css&quot; integrity=&quot;sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS&quot; crossorigin=&quot;anonymous&quot;&gt;
+    &lt;script src=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js&quot; integrity=&quot;sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;header&gt;
+  &lt;div class=&quot;d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm&quot;&gt;
+  &lt;h5 class=&quot;my-0 mr-md-auto font-weight-normal&quot;&gt;Narangram&lt;/h5&gt;
+  &lt;nav class=&quot;my-2 my-md-0 mr-md-3&quot;&gt;
+    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;a class=&quot;btn btn-outline-primary&quot; href=&quot;#&quot;&gt;Sign up&lt;/a&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;main role=&quot;main&quot;&gt;
+
+  &lt;section class=&quot;jumbotron text-center&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+      &lt;h1 class=&quot;jumbotron-heading&quot;&gt;Narangram About&lt;/h1&gt;
+      &lt;p class=&quot;lead text-muted&quot;&gt;
+          Esta es la sección About de Narangram
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+&lt;/main&gt;
+&lt;footer class=&quot;text-muted&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;p class=&quot;float-right&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Back to top&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;p&gt;Este es el footer&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Si nos fijamos, el header y el footer será el mismo en las dos vistas. 
+Ahora imaginad que queremos cambiar el menú y añadir una nueva sección. ¿Qué problema tendríamos? Pues que deberíamos 
+ir una a una cambiando exactamente lo mismo. ¿Es eso ideal? Para nada, más bien es un lastre, y por eso Django nos 
+proporciona un sistema muy potente de herencia para nuestras plantillas.</p>
+<p>Empezemos de 0, vamos a crear una plantilla base, y en esta ocasión vamos a hacerlo bien. Creamos el fichero base.html 
+dentro de templates/naranuser.</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Narangram Home&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css&quot; integrity=&quot;sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS&quot; crossorigin=&quot;anonymous&quot;&gt;
+    &lt;script src=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js&quot; integrity=&quot;sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;header&gt;
+  &lt;div class=&quot;d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm&quot;&gt;
+  &lt;h5 class=&quot;my-0 mr-md-auto font-weight-normal&quot;&gt;Narangram&lt;/h5&gt;
+  &lt;nav class=&quot;my-2 my-md-0 mr-md-3&quot;&gt;
+    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;a class=&quot;btn btn-outline-primary&quot; href=&quot;#&quot;&gt;Sign up&lt;/a&gt;
+&lt;/div&gt;
+&lt;/header&gt;
+&lt;main role=&quot;main&quot;&gt;
+
+    {% block content %}{% endblock %}
+
+&lt;/main&gt;
+&lt;footer class=&quot;text-muted&quot;&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;p class=&quot;float-right&quot;&gt;
+      &lt;a href=&quot;#&quot;&gt;Back to top&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;p&gt;Este es el footer&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Podemos ver como hemos añadido la parte repetitiva (header y footer) y hemos añadido una linea 
+<code>{% block content %}{% endblock %}</code> que es un <strong>template tag</strong> y sirve para añadir lógica de programación dentro del 
+propio HTML. Existen muchos template tags en Django, iremos descubriendo algunos de ellos sobre la marcha.</p>
+<p>En este caso el template tag <strong>block</strong> sirve para definir un bloque de contenido con un nombre.</p>
+<p>Ahora viene la magia, vamos de vuelta por ejemplo a nuestro template home.html y vamos a dejar únicamente la parte de 
+código específica de esa plantilla:</p>
+<pre><code class="html">{% extends 'naranuser/base.html' %}
+
+{% block content %}
+&lt;section class=&quot;jumbotron text-center&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;h1 class=&quot;jumbotron-heading&quot;&gt;Narangram About&lt;/h1&gt;
+        &lt;p class=&quot;lead text-muted&quot;&gt;
+            Esta es la sección About de Narangram
+        &lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;
+{% endblock %}
+
+</code></pre>
+
+<p>Podemos ver como hemos utilizado el template tag <code>extends</code> para indicarle a la plantilla <strong>home.html</strong> que herede el 
+contenido de <strong>base.html</strong> y como hemos marcado con el template tag <code>block</code> el contenido que es propio de la sección
+home.</p>
+<h2 id="ejercicio">Ejercicio</h2>
+<p>Adapta el código en <strong>base.html</strong>, <strong>home.html</strong> y <strong>about.html</strong> para que el <strong>title</strong> de la página sea también propio
+de cada sección.</p>
+<h2 id="template-tags">Template tags</h2></div>
         </div>
 
         <footer class="col-md-12">
