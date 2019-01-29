@@ -4,8 +4,17 @@
 
 - Primero instalamos [virtualenv](https://virtualenv.pypa.io/en/latest/installation/) para poder gestionar nuestros
 distintos entornos de desarrollo sin "contaminar" nuestro sistema operativo.
+
  
- `$ virtualenv venv` - Creamos un nuevo virtualenv para nuestro proyecto.
+ `$ sudo apt update; sudo apt -y dist-upgrade; sudo apt -y autoremove` 
+ 
+ `$ sudo apt install build-essential libssl-dev libffi-dev python3-dev python3-pip`
+ 
+ `$ pip3 install virtualenv` 
+ 
+ `$ pip3 install virtualenv` 
+ 
+ `$ virtualenv -p python3 venv` - Creamos un nuevo virtualenv para nuestro proyecto.
  
  `$ source venv/bin/activate` - Activamos el entorno virtual para nuestro nuevo proyecto.
  
