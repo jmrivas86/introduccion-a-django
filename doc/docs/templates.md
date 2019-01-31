@@ -29,7 +29,7 @@ adelante en este documento.
 
 Para utilizar una plantilla lo primero es crearla, y para ello debemos hacerlo siguiendo una lógica. 
 Lo primero es crear un directorio **templates** en nuestra app, que dentro debe contener otro 
-directorio con el mismo nombre que la app, en nuestro caso **naranuser**.
+directorio con el mismo nombre que la app, en nuestro caso **core**.
 
 Tenemos que hacerlo así porque Django funciona mezclando los directorios templates de las apps, de manera que al 
 final él tiene un solo directorio templates y dentro otro para cada app.
@@ -51,9 +51,9 @@ Vamos a realizar una primera versión (en crudo, sin estilos) de lo que sería n
 <h1>Mi Web Personal</h1>
 
 <ul>
-    <li><a href="/naranuser/">Portada</a></li>
-    <li><a href="/login/">Login</a></li>
-    <li><a href="/signup/">Signup</a></li>
+    <li><a href="/">Portada</a></li>
+    <li><a href="/accounts/login/">Login</a></li>
+    <li><a href="/accounts/signup/">Signup</a></li>
 </ul>
 
 <h2>Bienvenidos</h2>
@@ -71,7 +71,7 @@ Vamos al fichero **views.py** y realizemos un refactor de nuestra vista hello_wo
 
 ```python
 def home(request):
-    return render(request, "narangram/home.html")
+    return render(request, "core/home.html")
     
 ```
 
@@ -101,7 +101,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'naranuser.apps.NaranuserConfig',
+    'core',
 ]
 ```
 
@@ -124,7 +124,7 @@ el footer de la web.
   <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
   <h5 class="my-0 mr-md-auto font-weight-normal">Narangram</h5>
   <nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 text-dark" href="/naranuser/">Portada</a>
+    <a class="p-2 text-dark" href="/">Portada</a>
   </nav>
   <a class="btn btn-outline-primary" href="#">Sign up</a>
 </div>
@@ -281,7 +281,7 @@ Iríamos al fichero **views.py** y crearíamos un nuevo método **about**:
 
 ```python
 def about(request):
-    return render(request, "narangram/about.html")
+    return render(request, "core/about.html")
     
 ```
 
@@ -319,7 +319,7 @@ Vale imagina que hacemos "el camino fácil", copiamos el anterior html y añadim
   <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
   <h5 class="my-0 mr-md-auto font-weight-normal">Narangram</h5>
   <nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 text-dark" href="/naranuser/">Portada</a>
+    <a class="p-2 text-dark" href="//">Portada</a>
   </nav>
   <a class="btn btn-outline-primary" href="#">Sign up</a>
 </div>
@@ -354,7 +354,7 @@ ir una a una cambiando exactamente lo mismo. ¿Es eso ideal? Para nada, más bie
 proporciona un sistema muy potente de herencia para nuestras plantillas.
 
 Empezemos de 0, vamos a crear una plantilla base, y en esta ocasión vamos a hacerlo bien. Creamos el fichero base.html 
-dentro de templates/naranuser.
+dentro de templates/core.
 
 ```djangotemplate
 <!DOCTYPE html>
@@ -371,7 +371,7 @@ dentro de templates/naranuser.
   <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
   <h5 class="my-0 mr-md-auto font-weight-normal">Narangram</h5>
   <nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 text-dark" href="/naranuser/">Portada</a>
+    <a class="p-2 text-dark" href="/">Portada</a>
   </nav>
   <a class="btn btn-outline-primary" href="#">Sign up</a>
 </div>
@@ -403,7 +403,7 @@ Ahora viene la magia, vamos de vuelta por ejemplo a nuestro template home.html y
 código específica de esa plantilla:
 
 ```djangotemplate
-{% extends 'naranuser/base.html' %}
+{% extends 'core/base.html' %}
 
 {% block content %}
 <section class="jumbotron text-center">

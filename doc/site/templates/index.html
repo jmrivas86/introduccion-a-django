@@ -55,6 +55,9 @@
                             <li class="active">
                                 <a href="./">Templates</a>
                             </li>
+                            <li >
+                                <a href="../auth/">Auth</a>
+                            </li>
                         </ul>
 
                     <ul class="nav navbar-nav navbar-right">
@@ -68,8 +71,8 @@
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
-                            <li class="disabled">
-                                <a rel="prev" >
+                            <li >
+                                <a rel="prev" href="../auth/">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -82,17 +85,42 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#templates">Templates</a></li>
+            <li><a href="#variables">Variables</a></li>
+            <li><a href="#filtros">Filtros</a></li>
+            <li><a href="#tags">Tags</a></li>
             <li><a href="#herencia-de-plantillas">Herencia de plantillas</a></li>
             <li><a href="#ejercicio">Ejercicio</a></li>
-            <li><a href="#template-tags">Template tags</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
 <h1 id="templates">Templates</h1>
+<p>Una plantilla es simplemente un archivo de texto. Puede generar cualquier formato basado en texto (HTML, XML, CSV...)</p>
+<p>Una plantilla contiene variables, que se sustituyen por valores cuando se evalúa la plantilla, y tags, que controlan la
+ lógica de la plantilla.</p>
+<p>A continuación se muestra una plantilla mínima que ilustra algunos aspectos básicos. Cada elemento se explicará más 
+adelante en este documento.</p>
+<pre><code class="djangotemplate">{% extends &quot;base_generic.html&quot; %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+&lt;h1&gt;{{ section.title }}&lt;/h1&gt;
+
+{% for story in story_list %}
+&lt;h2&gt;
+  &lt;a href=&quot;{{ story.get_absolute_url }}&quot;&gt;
+    {{ story.headline|upper }}
+  &lt;/a&gt;
+&lt;/h2&gt;
+&lt;p&gt;{{ story.tease|truncatewords:&quot;100&quot; }}&lt;/p&gt;
+{% endfor %}
+{% endblock %}
+</code></pre>
+
 <p>Para utilizar una plantilla lo primero es crearla, y para ello debemos hacerlo siguiendo una lógica. 
 Lo primero es crear un directorio <strong>templates</strong> en nuestra app, que dentro debe contener otro 
-directorio con el mismo nombre que la app, en nuestro caso <strong>naranuser</strong>.</p>
+directorio con el mismo nombre que la app, en nuestro caso <strong>core</strong>.</p>
 <p>Tenemos que hacerlo así porque Django funciona mezclando los directorios templates de las apps, de manera que al 
 final él tiene un solo directorio templates y dentro otro para cada app.</p>
 <p>Dentro de este subdirectorio <strong>templates/narangram</strong> de la app vamos a comenzar creando un fichero <strong>home.html</strong>:</p>
@@ -108,9 +136,9 @@ final él tiene un solo directorio templates y dentro otro para cada app.</p>
 &lt;h1&gt;Mi Web Personal&lt;/h1&gt;
 
 &lt;ul&gt;
-    &lt;li&gt;&lt;a href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;/login/&quot;&gt;Login&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;/signup/&quot;&gt;Signup&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/&quot;&gt;Portada&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/accounts/login/&quot;&gt;Login&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;/accounts/signup/&quot;&gt;Signup&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2&gt;Bienvenidos&lt;/h2&gt;
@@ -125,7 +153,7 @@ final él tiene un solo directorio templates y dentro otro para cada app.</p>
 template HTML, y para ello vamos utilizar el método render del módulo http de Django, que ya viene incluido por defecto.</p>
 <p>Vamos al fichero <strong>views.py</strong> y realizemos un refactor de nuestra vista hello_world para adaptarla al proyecto:</p>
 <pre><code class="python">def home(request):
-    return render(request, &quot;narangram/home.html&quot;)
+    return render(request, &quot;core/home.html&quot;)
 
 </code></pre>
 
@@ -151,7 +179,7 @@ añadir la app en la lista <strong>INSTALLED_APPS</strong> justo abajo del todo:
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'naranuser.apps.NaranuserConfig',
+    'core',
 ]
 </code></pre>
 
@@ -172,7 +200,7 @@ el footer de la web.</p>
   &lt;div class=&quot;d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm&quot;&gt;
   &lt;h5 class=&quot;my-0 mr-md-auto font-weight-normal&quot;&gt;Narangram&lt;/h5&gt;
   &lt;nav class=&quot;my-2 my-md-0 mr-md-3&quot;&gt;
-    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;
+    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/&quot;&gt;Portada&lt;/a&gt;
   &lt;/nav&gt;
   &lt;a class=&quot;btn btn-outline-primary&quot; href=&quot;#&quot;&gt;Sign up&lt;/a&gt;
 &lt;/div&gt;
@@ -201,12 +229,97 @@ el footer de la web.</p>
 &lt;/html&gt;
 </code></pre>
 
+<h2 id="variables">Variables</h2>
+<pre><code class="djangotemplate">{% extends &quot;base_generic.html&quot; %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+&lt;h1&gt;{{ section.title }}&lt;/h1&gt;
+
+{% for story in story_list %}
+&lt;h2&gt;
+  &lt;a href=&quot;{{ story.get_absolute_url }}&quot;&gt;
+    {{ story.headline|upper }}
+  &lt;/a&gt;
+&lt;/h2&gt;
+&lt;p&gt;{{ story.tease|truncatewords:&quot;100&quot; }}&lt;/p&gt;
+{% endfor %}
+{% endblock %}
+</code></pre>
+
+<p>Las variables se ven así: <code>{{ variable }}</code>. </p>
+<p>Cuando el motor de plantillas encuentra una variable, evalúa esa variable y la reemplaza con el resultado. 
+Los nombres de variables pueden estar formados por cualquier combinación de caracteres alfanuméricos y
+el guión bajo ("_"), pero no pueden comenzar con un guión bajo. El punto (".") también aparece en las variables, 
+aunque tiene un significado especial, como se veremos a continuación. Es importante destacar que no puede tener 
+espacios o caracteres de puntuación en los nombres de las variables.</p>
+<p>Utilice un punto (.) para acceder a los atributos de una variable.</p>
+<p>En el ejemplo anterior, <code>{{ section.title }}}</code> será reemplazado por el atributo title del objeto section.</p>
+<p>Si utiliza una variable que no existe, el sistema de plantillas insertará el valor de la opción <code>string_if_invalid</code>, 
+que por defecto es '' (la cadena vacía).</p>
+<p>Tenga en cuenta que "bar" en una expresión de plantilla como <code>{{ foo.bar }}</code> se interpretará como una cadena literal y 
+no utilizando el valor de la variable "bar", si existe en el contexto de la plantilla.</p>
+<p>Los atributos de las variables que empiezan con un guión bajo no pueden ser accedidos ya que generalmente se 
+consideran privados.</p>
+<h2 id="filtros">Filtros</h2>
+<p>Podemos modificar las variables para su visualización mediante el uso de filtros.</p>
+<p>Los filtros se ven así: <code>{{ name|lower }}</code>. Esto muestra el valor de la variable <code>{{ name }}</code> después de ser filtrada,
+el filtro convierte el texto a minúsculas. Utilice una tubería (|) para aplicar un filtro.</p>
+<p>Los filtros pueden ser "encadenados". La salida de un filtro se aplica al siguiente. <code>{{ text|escape|linebreaks }}}</code> es 
+un lenguaje común para escapar contenidos de texto, y luego convertir saltos de línea a etiquetas <p>.</p>
+<p>Algunos filtros aceptan argumentos. Un argumento de filtro tiene el siguiente aspecto: <code>{{ bio|truncatewords:30 }}</code>. 
+Esto mostrará las primeras 30 palabras de la variable bio.</p>
+<p>Los argumentos de filtro que contienen espacios deben ser citados; por ejemplo, para unir una lista con comas y espacios
+ se debe usar <code>{{ list|join:", " }}</code>.</p>
+<p>Django proporciona unos <a href="https://docs.djangoproject.com/en/2.1/ref/templates/builtins/#ref-templates-builtins-filters">sesenta filtros</a> 
+de plantilla incorporados. Aquí están algunos de los filtros de plantillas más utilizados:</p>
+<h3 id="default">default</h3>
+<p>Si una variable es falsa o está vacía, utilice la opción predeterminada. De lo contrario, utilice el valor de la variable. </p>
+<p><code>{{ value|default:"nothing" }}</code></p>
+<p>Si value no se pasa o está vacío, en el html se mostrará "nothing".</p>
+<h3 id="length">length</h3>
+<p>Devuelve la longitud del valor. Esto funciona tanto para cadenas como para listas.</p>
+<p><code>{{ value|length" }}</code></p>
+<p>Si value es <code>['a', 'b', 'c', 'd']</code>, la salida será 4.</p>
+<h3 id="filesizeformat">filesizeformat</h3>
+<p>Formatea el valor como un tamaño de archivo "legible para humanos" (es decir,'13 KB', '4,1 MB', '102 bytes', etc.).</p>
+<p><code>{{ value|filesizeformat }}</code></p>
+<p>Si value es 123456789, la salida será 117.7 MB.</p>
+<h2 id="tags">Tags</h2>
+<p>Las template tags se ven así: <code>{% tag %}</code>. <strong>Las template tags son más complejas que las variables:</strong> Algunos crean texto 
+en la salida, otros controlan el flujo realizando bucles o lógica, y otros cargan información externa en la plantilla 
+para ser utilizada por variables posteriores.</p>
+<p>Algunas template tags requieren etiquetas iniciales y finales 
+(es decir, <code>{% tag %} .... contenido de la etiqueta... {% endtag %}</code>).</p>
+<p>Django viene de serie con muchos template tags incorporadas. Estas son algunas de las template tags más usados:</p>
+<h3 id="for">for</h3>
+<p>Bucle sobre cada elemento de una lista. Por ejemplo, para mostrar una lista de atletas proporcionada en athlete_list:</p>
+<pre><code class="djangotemplate">&lt;ul&gt;
+{% for athlete in athlete_list %}
+    &lt;li&gt;{{ athlete.name }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+</code></pre>
+
+<h3 id="if-elif-and-else">if, elif, and else</h3>
+<p>Evaluates a variable, and if that variable is «true» the contents of the block are displayed:
+Condicionales. Evalúa una variable, y si esa variable es "true" se muestra el contenido del bloque:</p>
+<pre><code class="djangotemplate">{% if athlete_list %}
+    Number of athletes: {{ athlete_list|length }}
+{% elif athlete_in_locker_room_list %}
+    Athletes should be out of the locker room soon!
+{% else %}
+    No athletes.
+{% endif %}
+</code></pre>
+
 <h2 id="herencia-de-plantillas">Herencia de plantillas</h2>
 <p>Si ahora quisiéramos crear una nueva url para dar información sobre la web, imagina que la llamamos "about", 
 ¿cómo lo haríamos?...</p>
 <p>Iríamos al fichero <strong>views.py</strong> y crearíamos un nuevo método <strong>about</strong>:</p>
 <pre><code class="python">def about(request):
-    return render(request, &quot;narangram/about.html&quot;)
+    return render(request, &quot;core/about.html&quot;)
 
 </code></pre>
 
@@ -240,7 +353,7 @@ urlpatterns = [
   &lt;div class=&quot;d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm&quot;&gt;
   &lt;h5 class=&quot;my-0 mr-md-auto font-weight-normal&quot;&gt;Narangram&lt;/h5&gt;
   &lt;nav class=&quot;my-2 my-md-0 mr-md-3&quot;&gt;
-    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;
+    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;//&quot;&gt;Portada&lt;/a&gt;
   &lt;/nav&gt;
   &lt;a class=&quot;btn btn-outline-primary&quot; href=&quot;#&quot;&gt;Sign up&lt;/a&gt;
 &lt;/div&gt;
@@ -274,8 +387,8 @@ Ahora imaginad que queremos cambiar el menú y añadir una nueva sección. ¿Qu�
 ir una a una cambiando exactamente lo mismo. ¿Es eso ideal? Para nada, más bien es un lastre, y por eso Django nos 
 proporciona un sistema muy potente de herencia para nuestras plantillas.</p>
 <p>Empezemos de 0, vamos a crear una plantilla base, y en esta ocasión vamos a hacerlo bien. Creamos el fichero base.html 
-dentro de templates/naranuser.</p>
-<pre><code class="html">&lt;!DOCTYPE html&gt;
+dentro de templates/core.</p>
+<pre><code class="djangotemplate">&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
     &lt;meta charset=&quot;UTF-8&quot;&gt;
@@ -289,7 +402,7 @@ dentro de templates/naranuser.</p>
   &lt;div class=&quot;d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm&quot;&gt;
   &lt;h5 class=&quot;my-0 mr-md-auto font-weight-normal&quot;&gt;Narangram&lt;/h5&gt;
   &lt;nav class=&quot;my-2 my-md-0 mr-md-3&quot;&gt;
-    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/naranuser/&quot;&gt;Portada&lt;/a&gt;
+    &lt;a class=&quot;p-2 text-dark&quot; href=&quot;/&quot;&gt;Portada&lt;/a&gt;
   &lt;/nav&gt;
   &lt;a class=&quot;btn btn-outline-primary&quot; href=&quot;#&quot;&gt;Sign up&lt;/a&gt;
 &lt;/div&gt;
@@ -317,7 +430,7 @@ propio HTML. Existen muchos template tags en Django, iremos descubriendo algunos
 <p>En este caso el template tag <strong>block</strong> sirve para definir un bloque de contenido con un nombre.</p>
 <p>Ahora viene la magia, vamos de vuelta por ejemplo a nuestro template home.html y vamos a dejar únicamente la parte de 
 código específica de esa plantilla:</p>
-<pre><code class="html">{% extends 'naranuser/base.html' %}
+<pre><code class="djangotemplate">{% extends 'core/base.html' %}
 
 {% block content %}
 &lt;section class=&quot;jumbotron text-center&quot;&gt;
@@ -336,9 +449,15 @@ código específica de esa plantilla:</p>
 contenido de <strong>base.html</strong> y como hemos marcado con el template tag <code>block</code> el contenido que es propio de la sección
 home.</p>
 <h2 id="ejercicio">Ejercicio</h2>
-<p>Adapta el código en <strong>base.html</strong>, <strong>home.html</strong> y <strong>about.html</strong> para que el <strong>title</strong> de la página sea también propio
-de cada sección.</p>
-<h2 id="template-tags">Template tags</h2></div>
+<ol>
+<li>
+<p>Adapta el código en <strong>base.html</strong>, <strong>home.html</strong> para que el <strong>title</strong> de la página sea propio de cada sección.</p>
+</li>
+<li>
+<p>Crea una nueva url en narangram que sea '/bienvenida/' y que muestre en el h1 un mensaje de bienvenida al usuario
+usando su username que le vendrá dado a la plantilla html a través de la view. </p>
+</li>
+</ol></div>
         </div>
 
         <footer class="col-md-12">

@@ -1,6 +1,6 @@
 # URLs y Views
 
-De los ficheros que se crearon en nuestra app **naranuser** el que nos interesa en esta sección es el llamado 
+De los ficheros que se crearon en nuestra app **core** el que nos interesa en esta sección es el llamado 
 **views.py**. 
 
 Este fichero es uno de los más importantes y en él se definen las vistas de la app. En la vista es dónde programaremos 
@@ -21,7 +21,7 @@ Nuestra vista __hello_world__ recibe un argumento llamado request, se trata de l
 de la que podemos hacer uso.
 
 Una vez que tenemos la vista (nuestra lógica de negocio) programada, tenemos que decirle a Django en qué URL 
-tiene que mostrarla. Para ello crearemos un fichero **urls.py** en nuestra app naranuser con el siguiente contenido:
+tiene que mostrarla. Para ello crearemos un fichero **urls.py** en nuestra app core con el siguiente contenido:
 
 ```
 from django.urls import path
@@ -42,7 +42,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('naranuser/', include('naranuser.urls')),
+    path('', include('core.urls')),
     path('admin/', admin.site.urls),
 ]
 

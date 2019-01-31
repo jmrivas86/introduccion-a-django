@@ -55,6 +55,9 @@
                             <li >
                                 <a href="templates/">Templates</a>
                             </li>
+                            <li >
+                                <a href="auth/">Auth</a>
+                            </li>
                         </ul>
 
                     <ul class="nav navbar-nav navbar-right">
@@ -100,7 +103,7 @@
 <li>Primero instalamos <a href="https://virtualenv.pypa.io/en/latest/installation/">virtualenv</a> para poder gestionar nuestros
 distintos entornos de desarrollo sin "contaminar" nuestro sistema operativo.</li>
 </ul>
-<p><code>$ sudo apt update; sudo apt -y dist-upgrade; sudo apt -y autoremove</code> </p>
+<p><code>$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</code> </p>
 <p><code>$ sudo apt install build-essential libssl-dev libffi-dev python3-dev python3-pip</code></p>
 <p><code>$ pip3 install virtualenv</code> - Importante hacer con el $USER (no root, no sudo)</p>
 <p><code>$ virtualenv -p python3 venv</code> - Creamos un nuevo virtualenv para nuestro proyecto.</p>
@@ -207,10 +210,10 @@ muchísimas apps de Django creadas por la comunidad y que podemos usar en nuestr
 </li>
 </ul>
 <p>Ahora que ya sabemos la diferencia vamos a empezar creando nuestra primera app que compondrá nuestro proyecto 
-<strong>narangram</strong>. Crearemos la app que gestionará el registro de usuarios, login, logout.</p>
-<p><code>$ python manage.py startapp naranuser</code></p>
-<p>Eso va a crear un directorio <strong>naranuser</strong> con la siguiente estructura de directorios:</p>
-<p><img alt="naranuser" src="imgs/app.png" title="Naranuser app" /></p></div>
+<strong>narangram</strong>. Crearemos la app que gestionará el core de nuestra web.</p>
+<p><code>$ python manage.py startapp core</code></p>
+<p>Eso va a crear un directorio <strong>core</strong> con la siguiente estructura de directorios:</p>
+<p><img alt="core" src="imgs/app.png" title="accounts core" /></p></div>
         </div>
 
         <footer class="col-md-12">
@@ -293,5 +296,5 @@ muchísimas apps de Django creadas por la comunidad y que podemos usar en nuestr
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-01-29 19:12:45
+Build Date UTC : 2019-01-31 20:06:01
 -->

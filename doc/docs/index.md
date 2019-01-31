@@ -128,13 +128,13 @@ muchísimas apps de Django creadas por la comunidad y que podemos usar en nuestr
 - Una aplicación puede estar en varios proyectos.
 
 Ahora que ya sabemos la diferencia vamos a empezar creando nuestra primera app que compondrá nuestro proyecto 
-**narangram**. Crearemos la app que gestionará el registro de usuarios, login, logout.
+**narangram**. Crearemos la app que gestionará el core de nuestra web.
 
-`$ python manage.py startapp naranuser`
+`$ python manage.py startapp core`
 
-Eso va a crear un directorio **naranuser** con la siguiente estructura de directorios:
+Eso va a crear un directorio **core** con la siguiente estructura de directorios:
 
-![naranuser](imgs/app.png "Naranuser app")
+![core](imgs/app.png "accounts core")
 
 
 
