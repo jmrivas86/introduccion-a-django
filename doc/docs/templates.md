@@ -1,5 +1,32 @@
 # Templates
- 
+
+Una plantilla es simplemente un archivo de texto. Puede generar cualquier formato basado en texto (HTML, XML, CSV...)
+
+Una plantilla contiene variables, que se sustituyen por valores cuando se evalúa la plantilla, y tags, que controlan la
+ lógica de la plantilla.
+
+A continuación se muestra una plantilla mínima que ilustra algunos aspectos básicos. Cada elemento se explicará más 
+adelante en este documento.
+
+```djangotemplate
+{% extends "base_generic.html" %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{% for story in story_list %}
+<h2>
+  <a href="{{ story.get_absolute_url }}">
+    {{ story.headline|upper }}
+  </a>
+</h2>
+<p>{{ story.tease|truncatewords:"100" }}</p>
+{% endfor %}
+{% endblock %}
+```
+
 Para utilizar una plantilla lo primero es crearla, y para ello debemos hacerlo siguiendo una lógica. 
 Lo primero es crear un directorio **templates** en nuestra app, que dentro debe contener otro 
 directorio con el mismo nombre que la app, en nuestro caso **naranuser**.
@@ -126,6 +153,125 @@ el footer de la web.
 </html>
 ```
 
+## Variables
+```djangotemplate
+{% extends "base_generic.html" %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{% for story in story_list %}
+<h2>
+  <a href="{{ story.get_absolute_url }}">
+    {{ story.headline|upper }}
+  </a>
+</h2>
+<p>{{ story.tease|truncatewords:"100" }}</p>
+{% endfor %}
+{% endblock %}
+```
+Las variables se ven así: `{{ variable }}`. 
+
+Cuando el motor de plantillas encuentra una variable, evalúa esa variable y la reemplaza con el resultado. 
+Los nombres de variables pueden estar formados por cualquier combinación de caracteres alfanuméricos y
+el guión bajo ("_"), pero no pueden comenzar con un guión bajo. El punto (".") también aparece en las variables, 
+aunque tiene un significado especial, como se veremos a continuación. Es importante destacar que no puede tener 
+espacios o caracteres de puntuación en los nombres de las variables.
+
+Utilice un punto (.) para acceder a los atributos de una variable.
+
+En el ejemplo anterior, `{{ section.title }}}` será reemplazado por el atributo title del objeto section.
+
+Si utiliza una variable que no existe, el sistema de plantillas insertará el valor de la opción `string_if_invalid`, 
+que por defecto es '' (la cadena vacía).
+
+Tenga en cuenta que "bar" en una expresión de plantilla como `{{ foo.bar }}` se interpretará como una cadena literal y 
+no utilizando el valor de la variable "bar", si existe en el contexto de la plantilla.
+
+Los atributos de las variables que empiezan con un guión bajo no pueden ser accedidos ya que generalmente se 
+consideran privados.
+
+## Filtros
+
+Podemos modificar las variables para su visualización mediante el uso de filtros.
+
+Los filtros se ven así: `{{ name|lower }}`. Esto muestra el valor de la variable `{{ name }}` después de ser filtrada,
+el filtro convierte el texto a minúsculas. Utilice una tubería (|) para aplicar un filtro.
+
+Los filtros pueden ser "encadenados". La salida de un filtro se aplica al siguiente. `{{ text|escape|linebreaks }}}` es 
+un lenguaje común para escapar contenidos de texto, y luego convertir saltos de línea a etiquetas <p>.
+
+Algunos filtros aceptan argumentos. Un argumento de filtro tiene el siguiente aspecto: `{{ bio|truncatewords:30 }}`. 
+Esto mostrará las primeras 30 palabras de la variable bio.
+
+Los argumentos de filtro que contienen espacios deben ser citados; por ejemplo, para unir una lista con comas y espacios
+ se debe usar `{{ list|join:", " }}`.
+
+Django proporciona unos [sesenta filtros](https://docs.djangoproject.com/en/2.1/ref/templates/builtins/#ref-templates-builtins-filters) 
+de plantilla incorporados. Aquí están algunos de los filtros de plantillas más utilizados:
+
+###default
+Si una variable es falsa o está vacía, utilice la opción predeterminada. De lo contrario, utilice el valor de la variable. 
+
+`{{ value|default:"nothing" }}`
+
+Si value no se pasa o está vacío, en el html se mostrará "nothing".
+
+###length
+Devuelve la longitud del valor. Esto funciona tanto para cadenas como para listas.
+
+`{{ value|length" }}`
+
+Si value es `['a', 'b', 'c', 'd']`, la salida será 4.
+
+
+###filesizeformat
+Formatea el valor como un tamaño de archivo "legible para humanos" (es decir,'13 KB', '4,1 MB', '102 bytes', etc.).
+
+`{{ value|filesizeformat }}`
+
+Si value es 123456789, la salida será 117.7 MB.
+
+## Tags
+Las template tags se ven así: `{% tag %}`. **Las template tags son más complejas que las variables:** Algunos crean texto 
+en la salida, otros controlan el flujo realizando bucles o lógica, y otros cargan información externa en la plantilla 
+para ser utilizada por variables posteriores.
+
+Algunas template tags requieren etiquetas iniciales y finales 
+(es decir, `{% tag %} .... contenido de la etiqueta... {% endtag %}`).
+
+Django viene de serie con muchos template tags incorporadas. Estas son algunas de las template tags más usados:
+
+###for
+Bucle sobre cada elemento de una lista. Por ejemplo, para mostrar una lista de atletas proporcionada en athlete_list:
+
+```djangotemplate
+<ul>
+{% for athlete in athlete_list %}
+    <li>{{ athlete.name }}</li>
+{% endfor %}
+</ul>
+```
+
+###if, elif, and else
+
+Evaluates a variable, and if that variable is «true» the contents of the block are displayed:
+Condicionales. Evalúa una variable, y si esa variable es "true" se muestra el contenido del bloque:
+
+
+```djangotemplate
+{% if athlete_list %}
+    Number of athletes: {{ athlete_list|length }}
+{% elif athlete_in_locker_room_list %}
+    Athletes should be out of the locker room soon!
+{% else %}
+    No athletes.
+{% endif %}
+```
+
+
 ## Herencia de plantillas
 
 Si ahora quisiéramos crear una nueva url para dar información sobre la web, imagina que la llamamos "about", 
@@ -210,7 +356,7 @@ proporciona un sistema muy potente de herencia para nuestras plantillas.
 Empezemos de 0, vamos a crear una plantilla base, y en esta ocasión vamos a hacerlo bien. Creamos el fichero base.html 
 dentro de templates/naranuser.
 
-```html
+```djangotemplate
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -256,7 +402,7 @@ En este caso el template tag **block** sirve para definir un bloque de contenido
 Ahora viene la magia, vamos de vuelta por ejemplo a nuestro template home.html y vamos a dejar únicamente la parte de 
 código específica de esa plantilla:
 
-```html
+```djangotemplate
 {% extends 'naranuser/base.html' %}
 
 {% block content %}
@@ -278,7 +424,7 @@ home.
 
 ## Ejercicio
 
-Adapta el código en **base.html**, **home.html** y **about.html** para que el **title** de la página sea también propio
-de cada sección.
+1. Adapta el código en **base.html**, **home.html** para que el **title** de la página sea propio de cada sección.
 
-## Template tags
+2. Crea una nueva url en narangram que sea '/bienvenida/' y que muestre en el h1 un mensaje de bienvenida al usuario
+usando su username que le vendrá dado a la plantilla html a través de la view. 
