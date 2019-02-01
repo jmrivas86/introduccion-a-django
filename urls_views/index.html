@@ -55,6 +55,9 @@
                             <li >
                                 <a href="../templates/">Templates</a>
                             </li>
+                            <li >
+                                <a href="../auth/">Auth</a>
+                            </li>
                         </ul>
 
                     <ul class="nav navbar-nav navbar-right">
@@ -87,7 +90,7 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="urls-y-views">URLs y Views</h1>
-<p>De los ficheros que se crearon en nuestra app <strong>naranuser</strong> el que nos interesa en esta sección es el llamado 
+<p>De los ficheros que se crearon en nuestra app <strong>core</strong> el que nos interesa en esta sección es el llamado 
 <strong>views.py</strong>. </p>
 <p>Este fichero es uno de los más importantes y en él se definen las vistas de la app. En la vista es dónde programaremos 
 la lógica que se ejecuta cuando se hace una petición a nuestra web y lo que vamos a hacer es crear una vista 
@@ -104,7 +107,7 @@ def hello_world(request):
 Nuestra vista <strong>hello_world</strong> recibe un argumento llamado request, se trata de la petición y  contiene mucha información
 de la que podemos hacer uso.</p>
 <p>Una vez que tenemos la vista (nuestra lógica de negocio) programada, tenemos que decirle a Django en qué URL 
-tiene que mostrarla. Para ello crearemos un fichero <strong>urls.py</strong> en nuestra app naranuser con el siguiente contenido:</p>
+tiene que mostrarla. Para ello crearemos un fichero <strong>urls.py</strong> en nuestra app core con el siguiente contenido:</p>
 <pre><code>from django.urls import path
 
 from . import views
@@ -121,7 +124,7 @@ volver ahí para indicarle que tenemos una app y que añada sus urls al proyecto
 from django.urls import include, path
 
 urlpatterns = [
-    path('naranuser/', include('naranuser.urls')),
+    path('', include('core.urls')),
     path('admin/', admin.site.urls),
 ]
 
